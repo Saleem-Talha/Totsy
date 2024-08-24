@@ -18,10 +18,6 @@
 <?php include 'includes/footer.php'; ?>
 <?php include 'includes/footer_links.php'; ?>
 
-
-   
-
-  
 </body>
 </html>
 

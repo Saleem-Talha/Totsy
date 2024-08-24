@@ -38,6 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $description = $db->real_escape_string($_POST['description']);
         $price = intval($_POST['price']);
         $created_at = date('Y-m-d');
+        $times_sold = intval($_POST['times_sold']); // Add times_sold
         
         $image = '';
         if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
@@ -52,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         
         $query = "INSERT INTO products (title, description, image, created_at, price, times_sold) 
-                  VALUES ('$title', '$description', '$image', '$created_at', $price, 0)";
+                  VALUES ('$title', '$description', '$image', '$created_at', $price, $times_sold)";
         if ($db->query($query) === TRUE) {
             echo "Product added successfully";
         } else {
@@ -61,13 +62,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     elseif (isset($_POST['add_availability'])) {
         $status = $db->real_escape_string($_POST['status']);
-        $product_id = intval($_POST['product_id']);
+        $product_name = $db->real_escape_string($_POST['product_name']);
         
-        $query = "INSERT INTO availability (status, product_id) VALUES ('$status', $product_id)";
-        if ($db->query($query) === TRUE) {
-            echo "Availability added successfully";
+        // First, get the product_id based on the product name
+        $query = "SELECT id FROM products WHERE title = '$product_name'";
+        $result = $db->query($query);
+        
+        if ($result && $result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $product_id = $row['id'];
+            
+            $query = "INSERT INTO availability (status, product_id) VALUES ('$status', $product_id)";
+            if ($db->query($query) === TRUE) {
+                echo "Availability added successfully";
+            } else {
+                echo "Error: " . $query . "<br>" . $db->error;
+            }
         } else {
-            echo "Error: " . $query . "<br>" . $db->error;
+            echo "Product not found";
         }
     }
     elseif (isset($_POST['add_review'])) {
@@ -83,17 +95,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     elseif (isset($_POST['add_offer'])) {
-        $product_id = intval($_POST['product_id']);
+        $product_name = $db->real_escape_string($_POST['product_name']);
         $discount = intval($_POST['discount']);
         $start_date = $db->real_escape_string($_POST['start_date']);
         $end_date = $db->real_escape_string($_POST['end_date']);
         
-        $query = "INSERT INTO offers (product_id, discount, start_date, end_date) 
-                  VALUES ($product_id, $discount, '$start_date', '$end_date')";
-        if ($db->query($query) === TRUE) {
-            echo "Offer added successfully";
+        // First, get the product_id based on the product name
+        $query = "SELECT id FROM products WHERE title = '$product_name'";
+        $result = $db->query($query);
+        
+        if ($result && $result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $product_id = $row['id'];
+            
+            $query = "INSERT INTO offers (product_id, discount, start_date, end_date) 
+                      VALUES ($product_id, $discount, '$start_date', '$end_date')";
+            if ($db->query($query) === TRUE) {
+                echo "Offer added successfully";
+            } else {
+                echo "Error: " . $query . "<br>" . $db->error;
+            }
         } else {
-            echo "Error: " . $query . "<br>" . $db->error;
+            echo "Product not found";
         }
     }
     elseif (isset($_POST['add_to_cart'])) {
@@ -141,6 +164,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Admin Panel</h1>
+        <a href="data.php" class="btn btn-primary mb-4">View Data</a>
 
         <!-- Products Form -->
         <h2>Add Product</h2>
@@ -157,10 +181,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="image" class="form-label">Image</label>
                 <input type="file" class="form-control" id="image" name="image" required>
             </div>
-            <div class="mb-3">
-                <label for="price" class="form-label">Price</label>
-                <input type="number" class="form-control" id="price" name="price" required>
-            </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price</label>
+                    <input type="number" class="form-control" id="price" name="price" required>
+                </div>
+                <div class="mb-3">
+                    <label for="times_sold" class="form-label">Times Sold</label>
+                    <input type="number" class="form-control" id="times_sold" name="times_sold" required>
+                </div>
             <button type="submit" name="add_product" class="btn btn-primary">Add Product</button>
         </form>
 
@@ -175,8 +203,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </select>
             </div>
             <div class="mb-3">
-                <label for="product_id" class="form-label">Product ID</label>
-                <input type="number" class="form-control" id="product_id" name="product_id" required>
+                <label for="product_name" class="form-label">Product Name</label>
+                <input type="text" class="form-control" id="product_name" name="product_name" required>
             </div>
             <button type="submit" name="add_availability" class="btn btn-primary">Add Availability</button>
         </form>
@@ -202,9 +230,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!-- Offers Form -->
         <h2>Add Offer</h2>
         <form action="" method="post" class="mb-4">
-            <div class="mb-3">
-                <label for="offer_product_id" class="form-label">Product ID</label>
-                <input type="number" class="form-control" id="offer_product_id" name="product_id" required>
+        <div class="mb-3">
+                <label for="offer_product_name" class="form-label">Product Name</label>
+                <input type="text" class="form-control" id="offer_product_name" name="product_name" required>
             </div>
             <div class="mb-3">
                 <label for="discount" class="form-label">Discount (%)</label>
