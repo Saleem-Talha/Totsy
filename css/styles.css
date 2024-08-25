@@ -1,0 +1,89 @@
+/* styles.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+:root {
+    /* Color variables */
+    --primary-color: #4ab6f4;
+    --secondary-color: #6c757d;
+    --background-color: #f8f9fa;
+    --text-color: #333333;
+    --super-color: linear-gradient(90deg, #4ab6f4, #ff69b4);
+    
+    /* Font variables */
+    --font-main: 'Montserrat', Arial, sans-serif;
+    --font-secondary: 'Helvetica', Arial, sans-serif;
+  
+    /* Sizing variables */
+    --spacing-small: 0.5rem;
+    --spacing-medium: 1rem;
+    --spacing-large: 2rem;
+}
+
+/* Global styles */
+html, body {
+    font-family: var(--font-main) !important;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+/* Ensure Montserrat is applied to all elements */
+* {
+    font-family: inherit;
+}
+
+/* Utility classes */
+.text-primary {
+    color: var(--primary-color);
+}
+
+.bg-secondary {
+    background-color: var(--secondary-color);
+}
+
+.m-small {
+    margin: var(--spacing-small);
+}
+
+.p-medium {
+    padding: var(--spacing-medium);
+}
+
+/* Custom component styles */
+.navbar-custom {
+    background-color: var(--primary-color);
+    padding: var(--spacing-medium);
+}
+
+.footer-custom {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: var(--spacing-large);
+}
+
+/* Add more custom styles as needed */
+
+.main-text {
+    color: var(--primary-color);
+}
+
+.main-bg {
+    background-color: var(--primary-color);
+}
+
+/* Ensure headings use Montserrat */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main) !important;
+}
+
+/* Override any potential Bootstrap font styles */
+.bootstrap-override {
+    font-family: var(--font-main) !important;
+}
+
+.super-color {
+    background: var(--super-color);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}

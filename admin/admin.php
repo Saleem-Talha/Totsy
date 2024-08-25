@@ -82,18 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "Product not found";
         }
     }
-    elseif (isset($_POST['add_review'])) {
-        $username = $db->real_escape_string($_POST['username']);
-        $description = $db->real_escape_string($_POST['description']);
-        $rating = intval($_POST['rating']);
-        
-        $query = "INSERT INTO reviews (username, description, rating) VALUES ('$username', '$description', $rating)";
-        if ($db->query($query) === TRUE) {
-            echo "Review added successfully";
-        } else {
-            echo "Error: " . $query . "<br>" . $db->error;
-        }
-    }
+    
     elseif (isset($_POST['add_offer'])) {
         $product_name = $db->real_escape_string($_POST['product_name']);
         $discount = intval($_POST['discount']);
@@ -119,20 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "Product not found";
         }
     }
-    elseif (isset($_POST['add_to_cart'])) {
-        $product_id = intval($_POST['product_id']);
-        $quantity = intval($_POST['quantity']);
-        $price_at_addition = intval($_POST['price_at_addition']);
-        $total = $quantity * $price_at_addition;
-        
-        $query = "INSERT INTO cart (product_id, quantity, price_at_addition, total) 
-                  VALUES ($product_id, $quantity, $price_at_addition, $total)";
-        if ($db->query($query) === TRUE) {
-            echo "Item added to cart successfully";
-        } else {
-            echo "Error: " . $query . "<br>" . $db->error;
-        }
-    }
+   
     elseif (isset($_POST['change_password'])) {
         $new_password = $_POST['password'];
         
@@ -151,6 +127,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
+
+$product_query = "SELECT id, title FROM products";
+$product_result = $db->query($product_query);
+$products = [];
+if ($product_result) {
+    while ($row = $product_result->fetch_assoc()) {
+        $products[$row['id']] = $row['title'];
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -204,35 +190,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="mb-3">
                 <label for="product_name" class="form-label">Product Name</label>
-                <input type="text" class="form-control" id="product_name" name="product_name" required>
+                <select class="form-control" id="product_name" name="product_name" required>
+                    <option value="">Select a product</option>
+                    <?php foreach ($products as $id => $title): ?>
+                        <option value="<?php echo htmlspecialchars($title); ?>"><?php echo htmlspecialchars($title); ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
             <button type="submit" name="add_availability" class="btn btn-primary">Add Availability</button>
         </form>
 
-        <!-- Reviews Form -->
-        <h2>Add Review</h2>
-        <form action="" method="post" class="mb-4">
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username" required>
-            </div>
-            <div class="mb-3">
-                <label for="review_description" class="form-label">Description</label>
-                <textarea class="form-control" id="review_description" name="description" required></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="rating" class="form-label">Rating</label>
-                <input type="number" class="form-control" id="rating" name="rating" min="1" max="5" required>
-            </div>
-            <button type="submit" name="add_review" class="btn btn-primary">Add Review</button>
-        </form>
+        
 
         <!-- Offers Form -->
         <h2>Add Offer</h2>
         <form action="" method="post" class="mb-4">
         <div class="mb-3">
-                <label for="offer_product_name" class="form-label">Product Name</label>
-                <input type="text" class="form-control" id="offer_product_name" name="product_name" required>
+        <label for="offer_product_name" class="form-label">Product Name</label>
+        <select class="form-control" id="offer_product_name" name="product_name" required>
+            <option value="">Select a product</option>
+            <?php foreach ($products as $id => $title): ?>
+                <option value="<?php echo htmlspecialchars($title); ?>"><?php echo htmlspecialchars($title); ?></option>
+            <?php endforeach; ?>
+        </select>
             </div>
             <div class="mb-3">
                 <label for="discount" class="form-label">Discount (%)</label>
@@ -249,23 +229,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit" name="add_offer" class="btn btn-primary">Add Offer</button>
         </form>
 
-        <!-- Cart Form -->
-        <h2>Add to Cart</h2>
-        <form action="" method="post" class="mb-4">
-            <div class="mb-3">
-                <label for="cart_product_id" class="form-label">Product ID</label>
-                <input type="number" class="form-control" id="cart_product_id" name="product_id" required>
-            </div>
-            <div class="mb-3">
-                <label for="quantity" class="form-label">Quantity</label>
-                <input type="number" class="form-control" id="quantity" name="quantity" required>
-            </div>
-            <div class="mb-3">
-                <label for="price_at_addition" class="form-label">Price at Addition</label>
-                <input type="number" class="form-control" id="price_at_addition" name="price_at_addition" required>
-            </div>
-            <button type="submit" name="add_to_cart" class="btn btn-primary">Add to Cart</button>
-        </form>
+       
 
         <!-- Password Form -->
         <h2>Change Password</h2>

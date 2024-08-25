@@ -1,7 +1,0 @@
-.root{
-    --var-primary: rgb(74, 182, 244);
-}
-
-.main-text{
-    color: var(--var-primary);
-}
