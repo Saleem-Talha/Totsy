@@ -6,6 +6,7 @@
     <title>Product Highlights</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         body {
             background-color: #f8f9fa;
@@ -45,11 +46,19 @@
             color: #4ab6f4;
             margin-bottom: 0.5rem;
         }
+
+        .gradient-heading {
+            background: linear-gradient(90deg, #4ab6f4, #ff69b4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            
+        }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Product Highlights</h1>
+    <div class="container mt-5" id="services">
+        <h1 class="text-center mb-4 gradient-heading" data-aos="fade-up">Product Highlights</h1>
         <div class="row">
             <?php
             $highlights = [
@@ -63,9 +72,9 @@
                 ['title' => 'Ideal Gift', 'description' => 'Perfect for birthdays or special occasions.', 'icon' => 'bx-gift']
             ];
 
-            foreach ($highlights as $highlight):
+            foreach ($highlights as $index => $highlight):
             ?>
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="<?php echo $index * 100; ?>">
                 <div class="highlight-card p-3">
                     <i class='bx <?php echo $highlight['icon']; ?> highlight-icon'></i>
                     <h3 class="highlight-title"><?php echo $highlight['title']; ?></h3>
@@ -77,5 +86,12 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    </script>
 </body>
 </html>

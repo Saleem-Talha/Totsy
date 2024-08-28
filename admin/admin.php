@@ -31,33 +31,42 @@ function uploadImage($file) {
     return false;
 }
 
+// Initialize a variable to store toast messages
+$toast_message = '';
+
 // Handle form submissions
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['add_product'])) {
         $title = $db->real_escape_string($_POST['title']);
-        $description = $db->real_escape_string($_POST['description']);
         $price = intval($_POST['price']);
         $created_at = date('Y-m-d');
-        $times_sold = intval($_POST['times_sold']); // Add times_sold
+        $times_sold = intval($_POST['times_sold']); 
+        $type = $db->real_escape_string($_POST['type']);
         
         $image = '';
         if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
             $image = uploadImage($_FILES['image']);
             if ($image === false) {
-                echo "Failed to upload image.";
-                // Handle the error appropriately
+                $toast_message = "Failed to upload image.";
             }
         } else {
-            echo "No file was uploaded or an error occurred during upload.";
-            // Handle the error appropriately
+            $toast_message = "No file was uploaded or an error occurred during upload.";
         }
         
-        $query = "INSERT INTO products (title, description, image, created_at, price, times_sold) 
-                  VALUES ('$title', '$description', '$image', '$created_at', $price, $times_sold)";
+        $query = "INSERT INTO products (title, image, created_at, price, times_sold, type) 
+                  VALUES ('$title', '$image', '$created_at', $price, $times_sold, '$type')";
         if ($db->query($query) === TRUE) {
-            echo "Product added successfully";
+            $product_id = $db->insert_id;
+            
+            // Add the product to availability with "In stock" status
+            $availability_query = "INSERT INTO availability (status, product_id) VALUES ('In stock', $product_id)";
+            if ($db->query($availability_query) === TRUE) {
+                $toast_message = "Product added successfully and set to 'In stock'";
+            } else {
+                $toast_message = "Product added but failed to set availability: " . $db->error;
+            }
         } else {
-            echo "Error: " . $query . "<br>" . $db->error;
+            $toast_message = "Error: " . $query . "<br>" . $db->error;
         }
     }
     elseif (isset($_POST['add_availability'])) {
@@ -74,12 +83,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             $query = "INSERT INTO availability (status, product_id) VALUES ('$status', $product_id)";
             if ($db->query($query) === TRUE) {
-                echo "Availability added successfully";
+                $toast_message = "Availability added successfully";
             } else {
-                echo "Error: " . $query . "<br>" . $db->error;
+                $toast_message = "Error: " . $query . "<br>" . $db->error;
             }
         } else {
-            echo "Product not found";
+            $toast_message = "Product not found";
         }
     }
     
@@ -100,12 +109,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $query = "INSERT INTO offers (product_id, discount, start_date, end_date) 
                       VALUES ($product_id, $discount, '$start_date', '$end_date')";
             if ($db->query($query) === TRUE) {
-                echo "Offer added successfully";
+                $toast_message = "Offer added successfully";
             } else {
-                echo "Error: " . $query . "<br>" . $db->error;
+                $toast_message = "Error: " . $query . "<br>" . $db->error;
             }
         } else {
-            echo "Product not found";
+            $toast_message = "Product not found";
         }
     }
    
@@ -118,12 +127,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Now insert the new password
             $insert_query = "INSERT INTO password (password) VALUES ('$new_password')";
             if ($db->query($insert_query) === TRUE) {
-                echo "Password changed successfully";
+                $toast_message = "Password changed successfully";
             } else {
-                echo "Error inserting new password: " . $db->error;
+                $toast_message = "Error inserting new password: " . $db->error;
             }
         } else {
-            echo "Error deleting old password: " . $db->error;
+            $toast_message = "Error deleting old password: " . $db->error;
         }
     }
 }
@@ -138,110 +147,226 @@ if ($product_result) {
 }
 
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
-    
+    <title>Admin Panel - TOTSY.pk</title>
+    <link rel="icon" href="../logo/totsy_logo.jpg" type="image/x-icon">
+    <?php include '../includes/header-links.php'; ?>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        .gradient-text {
+            font-weight: 500;
+            background: linear-gradient(90deg, #4ab6f4, #ff69b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        .card-header {
+            background-color: transparent;
+            border-bottom: none;
+            padding-top: 1.5rem;
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, #4ab6f4, #ff69b4);
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+            box-shadow: 0 0 10px rgba(74, 182, 244, 0.5), 0 0 10px rgba(255, 105, 180, 0.5);
+        }
+        h2 {
+            font-weight: 300;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="mb-4">Admin Panel</h1>
-        <a href="data.php" class="btn btn-primary mb-4">View Data</a>
-
-        <!-- Products Form -->
-        <h2>Add Product</h2>
-        <form action="" method="post" enctype="multipart/form-data" class="mb-4">
-            <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control" id="title" name="title" required>
-            </div>
-            <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea class="form-control" id="description" name="description" required></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="image" class="form-label">Image</label>
-                <input type="file" class="form-control" id="image" name="image" required>
-            </div>
-                <div class="mb-3">
-                    <label for="price" class="form-label">Price</label>
-                    <input type="number" class="form-control" id="price" name="price" required>
-                </div>
-                <div class="mb-3">
-                    <label for="times_sold" class="form-label">Times Sold</label>
-                    <input type="number" class="form-control" id="times_sold" name="times_sold" required>
-                </div>
-            <button type="submit" name="add_product" class="btn btn-primary">Add Product</button>
-        </form>
-
-        <!-- Availability Form -->
-        <h2>Add Availability</h2>
-        <form action="" method="post" class="mb-4">
-            <div class="mb-3">
-                <label for="status" class="form-label">Status</label>
-                <select class="form-control" id="status" name="status" required>
-                    <option value="In stock">In stock</option>
-                    <option value="Out of stock">Out of stock</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="product_name" class="form-label">Product Name</label>
-                <select class="form-control" id="product_name" name="product_name" required>
-                    <option value="">Select a product</option>
-                    <?php foreach ($products as $id => $title): ?>
-                        <option value="<?php echo htmlspecialchars($title); ?>"><?php echo htmlspecialchars($title); ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <button type="submit" name="add_availability" class="btn btn-primary">Add Availability</button>
-        </form>
-
+    <div class="container">
+        <h1 class="text-center mb-5">
+            <span class="gradient-text">TOTSY</span><span style="font-weight: 300;">.pk</span>
+            <br>
+            <small class="text-muted" style="font-weight: 300;">Admin Panel</small>
+        </h1>
         
+        <div class="text-center mb-4">
+            <a href="data.php" class="btn btn-sm btn-primary btn-lg">View Data</a>
+        </div>
 
-        <!-- Offers Form -->
-        <h2>Add Offer</h2>
-        <form action="" method="post" class="mb-4">
-        <div class="mb-3">
-        <label for="offer_product_name" class="form-label">Product Name</label>
-        <select class="form-control" id="offer_product_name" name="product_name" required>
-            <option value="">Select a product</option>
-            <?php foreach ($products as $id => $title): ?>
-                <option value="<?php echo htmlspecialchars($title); ?>"><?php echo htmlspecialchars($title); ?></option>
-            <?php endforeach; ?>
-        </select>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-center">Add Product</h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Title</label>
+                                <input type="text" class="form-control" id="title" name="title" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Image</label>
+                                <input type="file" class="form-control" id="image" name="image" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="price" class="form-label">Price</label>
+                                <input type="number" class="form-control" id="price" name="price" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="times_sold" class="form-label">Times Sold</label>
+                                <input type="number" class="form-control" id="times_sold" name="times_sold" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="type" class="form-label">Type</label>
+                                <select class="form-select" id="type" name="type" required>
+                                    <option value="">Select a type</option>
+                                    <option value="Velvet & Vibes">Velvet & Vibes</option>
+                                    <option value="Totsy">Totsy</option>
+                                </select>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" name="add_product" class="btn btn-primary">Add Product</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="discount" class="form-label">Discount (%)</label>
-                <input type="number" class="form-control" id="discount" name="discount" required>
+            
+            <div class="col-md-6">
+            <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-center">Add Offer</h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="post">
+                            <div class="mb-3">
+                                <label for="offer_product_name" class="form-label">Product Name</label>
+                                <select class="form-select" id="offer_product_name" name="product_name" required>
+                                    <option value="">Select a product</option>
+                                    <?php foreach ($products as $id => $title): ?>
+                                        <option value="<?php echo htmlspecialchars($title); ?>"><?php echo htmlspecialchars($title); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="discount" class="form-label">Discount (%)</label>
+                                <input type="number" class="form-control" id="discount" name="discount" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="start_date" class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="start_date" name="start_date" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="end_date" class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="end_date" name="end_date" required>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" name="add_offer" class="btn btn-primary">Add Offer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
             </div>
-            <div class="mb-3">
-                <label for="start_date" class="form-label">Start Date</label>
-                <input type="date" class="form-control" id="start_date" name="start_date" required>
-            </div>
-            <div class="mb-3">
-                <label for="end_date" class="form-label">End Date</label>
-                <input type="date" class="form-control" id="end_date" name="end_date" required>
-            </div>
-            <button type="submit" name="add_offer" class="btn btn-primary">Add Offer</button>
-        </form>
+        </div>
 
-       
-
-        <!-- Password Form -->
-        <h2>Change Password</h2>
-        <form action="" method="post" class="mb-4">
-            <div class="mb-3">
-                <label for="password" class="form-label">New Password</label>
-                <input type="password" class="form-control" id="password" name="password" required>
+        <div class="row">
+            <div class="col-md-6">
+            <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-center">Add Availability</h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="post">
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="In stock">In stock</option>
+                                    <option value="Out of stock">Out of stock</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="product_name" class="form-label">Product Name</label>
+                                <select class="form-select" id="product_name" name="product_name" required>
+                                    <option value="">Select a product</option>
+                                    <?php foreach ($products as $id => $title): ?>
+                                        <option value="<?php echo htmlspecialchars($title); ?>"><?php echo htmlspecialchars($title); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" name="add_availability" class="btn btn-primary">Add Availability</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <button type="submit" name="change_password" class="btn btn-primary">Change Password</button>
-        </form>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-center">Change Password</h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="post">
+                            <div class="mb-3">
+                                <label for="password" class="form-label">New Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                    <button class="btn btn-outline-primary" type="button" id="togglePassword">
+                                        <i class="bx bx-show"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" name="change_password" class="btn btn-primary">Change Password</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.getElementById('togglePassword').addEventListener('click', function () {
+                    const password = document.getElementById('password');
+                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                    password.setAttribute('type', type);
+                    const icon = this.querySelector('i');
+                    icon.classList.toggle('bx-hide');
+                    icon.classList.toggle('bx-show');
+                });
+            </script>
+        </div>
     </div>
 
     <?php include '../includes/footer_links.php'; ?>
+
+    <!-- Toast container -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                <?php echo $toast_message; ?>
+            </div>
+        </div>
+    </div>
+
+    <script>
 </body>
 </html>

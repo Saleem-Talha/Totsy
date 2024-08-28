@@ -3,7 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Totsy</title>
+    <title>Totsy - Kids Cartoon Printed Single Bed Sheets | Enchanting Dreams</title>
+    <meta name="description" content="Totsy offers magical Kids Cartoon Printed Single Bed Sheets. Transform bedtime into an adventure with our high-quality, imaginative bedding solutions.">
+    <meta name="keywords" content="Totsy, kids bedding, cartoon bed sheets, single bed sheets, children's bedding">
+    <link rel="canonical" href="https://www.totsy.com/">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Totsy - Kids Cartoon Printed Single Bed Sheets">
+    <meta property="og:description" content="Discover enchanting Kids Cartoon Printed Single Bed Sheets at Totsy. Create magical bedtime experiences for your little ones.">
+    <meta property="og:image" content="https://www.totsy.com/images/totsy-og-image.jpg">
+    <meta property="og:url" content="https://www.totsy.com/">
+    <meta name="twitter:card" content="summary_large_image">
+    
     <link rel="icon" href="logo/totsy_logo.jpg" type="image/x-icon">
     
     <!-- Google Fonts -->
@@ -23,19 +33,33 @@
     <!-- Your custom CSS - make sure the path is correct -->
     <link rel="stylesheet" href="/totsy/css/styles.css">
     
-   
 </head>
 <body>
     
 <?php include 'includes/navbar.php'; ?>
-<?php include 'hero.php'; ?>
-<?php include 'products.php'; ?>
-<?php include 'services.php'; ?>
-<?php include 'reviews.php'; ?>
-<?php include 'about.php'; ?>
-<?php include 'contact.php'; ?>
+<?php include 'components/hero.php'; ?>
+<?php include 'components/products.php'; ?>
+<?php include 'components/services.php'; ?>
+<?php include 'components/reviews.php'; ?>
+<?php include 'components/contact.php'; ?>
 <?php include 'includes/footer.php'; ?>
 <?php include 'includes/footer_links.php'; ?>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Totsy",
+  "url": "https://www.totsy.com",
+  "logo": "https://www.totsy.com/logo/totsy_logo.jpg",
+  "description": "Totsy offers magical Kids Cartoon Printed Single Bed Sheets, transforming bedtime into an adventure.",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+1-555-123-4567",
+    "contactType": "customer service"
+  }
+}
+</script>
 
 </body>
 </html>
@@ -51,4 +75,3 @@
             }
         });
     </script>
-

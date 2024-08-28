@@ -141,7 +141,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light fixed-top">
     <div class="container-fluid">
-        <a class="navbar-brand d-flex align-items-center ms-3" href="#">
+        <a class="navbar-brand d-flex align-items-center ms-3" href="index.php">
             <img src="logo/totsy_logo.jpg" alt="Logo" width="70" height="70" class="d-inline-block align-text-top me-3 rounded-circle">
             <span style="font-weight: 500; background: linear-gradient(90deg, #4ab6f4, #ff69b4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">TOTSY</span>
         </a>
@@ -159,12 +159,10 @@
             </form>
 
             <ul class="navbar-nav mb-2 mb-lg-0 ms-3 me-s">
-                <li class="nav-item"><a class="nav-link" href="#home" title="Home"><i class='bx bx-home-alt'></i><span>Home</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#products" title="Products"><i class='bx bx-store'></i><span>Products</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#services" title="Services"><i class='bx bx-server'></i><span>Services</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#feedbacks" title="Feedbacks"><i class='bx bx-message-square-dots'></i><span>Feedbacks</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#about" title="About"><i class='bx bx-info-circle'></i><span>About</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#contact" title="Contact"><i class='bx bx-envelope'></i><span>Contact</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="index.php" title="Home"><i class='bx bx-home-alt'></i><span>Home</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="pages/product_page.php" title="Products"><i class='bx bx-store'></i><span>Products</span></a></li>
+               <li class="nav-item"><a class="nav-link" href="pages/review_page.php" title="Reviews"><i class='bx bx-message-square-dots'></i><span>Reviews</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="pages/about_page.php" title="About"><i class='bx bx-info-circle'></i><span>About</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="#cart" title="Cart"><i class='bx bx-cart'></i><span>Cart</span></a></li>
             </ul>
         </div>

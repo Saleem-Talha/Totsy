@@ -18,6 +18,7 @@ $result = $db->query($query);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="css/styles.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         .card {
             border: none;
@@ -38,7 +39,8 @@ $result = $db->query($query);
         .card-img-top {
             border-radius: 10px 10px 0 0;
             object-fit: cover;
-            height: 150px; /* Decreased image height */
+            height: 150px; /* Fixed image height */
+            width: 100%;
             transition: transform 0.3s ease;
         }
 
@@ -58,6 +60,9 @@ $result = $db->query($query);
             font-size: 1rem;
             margin-bottom: 0.5rem;
             text-transform: uppercase;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .price {
@@ -111,12 +116,15 @@ $result = $db->query($query);
     </style>
 </head>
 <body class="bootstrap-override">
-    <div class="container mt-5">
-        <h1 class="text-center mb-5 super-color">Our Products</h1>
+    <div class="container mt-5 " id="products">
+        <h1 class="text-center mb-5 super-color" data-aos="fade-up">Our Products</h1>
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            <?php while ($product = $result->fetch_assoc()): ?>
-                <div class="col">
-                    <a href="product_details.php?id=<?php echo $product['id']; ?>" class="card-link">
+            <?php 
+            $delay = 0;
+            while ($product = $result->fetch_assoc()): 
+            ?>
+                <div class="col" data-aos="fade-up" data-aos-delay="<?php echo $delay; ?>">
+                    <a href="/totsy/pages/product_details.php?id=<?php echo $product['id']; ?>" class="card-link">
                         <div class="card">
                             <?php
                             $image_path = "admin/uploads/" . basename($product['image']);
@@ -140,10 +148,20 @@ $result = $db->query($query);
                         </div>
                     </a>
                 </div>
-            <?php endwhile; ?>
+            <?php 
+            $delay += 100; // Increment delay for each product
+            endwhile; 
+            ?>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    </script>
 </body>
 </html>

@@ -17,8 +17,12 @@
         .carousel-content {
             z-index: 2;
         }
-        
-
+        .logo-btn {
+            transition: transform 0.3s ease;
+        }
+        .logo-btn:hover {
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
@@ -46,21 +50,26 @@
                 <span style="font-weight: 300;">.pk</span>
             </h1>
             <p class="lead mb-5 montserrat-400 animate__animated animate__fadeInUp animate__delay-1s">Dream in color—explore our vibrant bedsheet range</p>
-            <a href="https://www.daraz.pk/shop/toys-n-toys-1663884939?path=profile.htm&pageTypeId=1" target="_blank" class="btn btn-sm btn-lg animate__animated animate__fadeInDown animate__delay-2s" style="background: linear-gradient(90deg, #4ab6f4, #ff69b4); color: white; border: none; transition: all 0.3s ease;">
-                <i class='bx bx-store-alt me-2 '></i>Visit Store
-
-            </a>
-            <style>
-                .btn:hover {
-                    background: linear-gradient(90deg, #ff69b4, #4ab6f4) !important;
-                    color: white !important;
-                }
-            </style>
+            <div class="d-flex justify-content-center">
+                <a href="https://www.daraz.pk/toys-n-toys-1663884939/?q=All-Products&from=wangpu&langFlag=en&pageTypeId=2" class="me-3 logo-btn animate__animated animate__fadeInUp animate__delay-2s" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Visit Totsy.pk on Daraz">
+                    <img src="logo/totsy_logo.jpg" alt="Totsy Logo" class="img-fluid rounded-circle" style="width: 60px; height: 60px;">
+                </a>
+                <a href="https://www.daraz.pk/ac7c3zby/?q=All-Products&from=wangpu&langFlag=en&pageTypeId=2" class="logo-btn animate__animated animate__fadeInUp animate__delay-2s" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Visit Velvet & Vibes on Daraz">
+                    <img src="logo/other_logo.jpeg" alt="Other Logo" class="img-fluid rounded-circle" style="width: 60px; height: 60px;">
+                </a>
+            </div>
         </div>
     </div>
 </section>
 
-
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    });
+</script>
 
 </body>
 </html>

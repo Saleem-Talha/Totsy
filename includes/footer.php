@@ -16,9 +16,10 @@
             <div class="col-md-3 mb-4">
                 <h5 class="text-uppercase" style="background: linear-gradient(90deg, #4ab6f4, #ff69b4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600;">Quick Links</h5>
                 <ul class="list-unstyled">
-                    <li><a href="#home" class="text-dark text-decoration-none" style="transition: color 0.3s ease;">Home</a></li>
-                    <li><a href="#products" class="text-dark text-decoration-none" style="transition: color 0.3s ease;">Products</a></li>
-                    <li><a href="#feedbacks" class="text-dark text-decoration-none" style="transition: color 0.3s ease;">Feedbacks</a></li>
+                    <li><a href="../index.php" class="text-dark text-decoration-none" style="transition: color 0.3s ease;">Home</a></li>
+                    <li><a href="../pages/product_page.php" class="text-dark text-decoration-none" style="transition: color 0.3s ease;">Kids Cartoon Bed Sheets</a></li>
+                    <li><a href="../pages/about_page.php" class="text-dark text-decoration-none" style="transition: color 0.3s ease;">About TOTSY</a></li>
+                    <li><a href="../pages/reviews_page.php" class="text-dark text-decoration-none" style="transition: color 0.3s ease;">Customer Feedbacks</a></li>
                 </ul>
             </div>
 
