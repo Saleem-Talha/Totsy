@@ -21,20 +21,33 @@ $update_success = false;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Handle the form submission to update the record
     $updates = [];
-    foreach ($_POST as $key => $value) {
-        if ($key != 'table' && $key != 'id') {
-            $updates[] = "`$key` = '" . $db->real_escape_string($value) . "'";
+    if ($table === 'orders') {
+        // For orders table, only allow status update
+        if (isset($_POST['status'])) {
+            $status = $db->real_escape_string($_POST['status']);
+            $updates[] = "`status` = '$status'";
+        }
+    } else {
+        foreach ($_POST as $key => $value) {
+            if ($key != 'table' && $key != 'id') {
+                $updates[] = "`$key` = '" . $db->real_escape_string($value) . "'";
+            }
         }
     }
     
-    $updateQuery = "UPDATE `$table` SET " . implode(', ', $updates) . " WHERE `id` = $id";
-    if ($db->query($updateQuery)) {
-        $toast_message = "Record updated successfully";
-        $toast_type = "success";
-        $update_success = true;
+    if (!empty($updates)) {
+        $updateQuery = "UPDATE `$table` SET " . implode(', ', $updates) . " WHERE `id` = $id";
+        if ($db->query($updateQuery)) {
+            $toast_message = "Record updated successfully";
+            $toast_type = "success";
+            $update_success = true;
+        } else {
+            $toast_message = "Error updating record: " . $db->error;
+            $toast_type = "error";
+        }
     } else {
-        $toast_message = "Error updating record: " . $db->error;
-        $toast_type = "error";
+        $toast_message = "No updates were made";
+        $toast_type = "warning";
     }
 }
 
@@ -135,12 +148,25 @@ if ($result && $result->num_rows > 0) {
                     <input type="hidden" name="table" value="<?php echo htmlspecialchars($table); ?>">
                     <input type="hidden" name="id" value="<?php echo htmlspecialchars($id); ?>">
                     <?php
-                    foreach ($record as $key => $value) {
-                        if ($key != 'id') {
-                            echo "<div class='mb-3'>";
-                            echo "<label for='$key' class='form-label'>" . htmlspecialchars(ucfirst($key)) . "</label>";
-                            echo "<input type='text' class='form-control' id='$key' name='$key' value='" . htmlspecialchars($value) . "'>";
-                            echo "</div>";
+                    if ($table === 'orders') {
+                        echo "<div class='mb-3'>";
+                        echo "<label for='status' class='form-label'>Status</label>";
+                        echo "<select class='form-select' id='status' name='status'>";
+                        $statuses = ['Pending', 'Completed'];
+                        foreach ($statuses as $status) {
+                            $selected = ($record['status'] == $status) ? 'selected' : '';
+                            echo "<option value='$status' $selected>$status</option>";
+                        }
+                        echo "</select>";
+                        echo "</div>";
+                    } else {
+                        foreach ($record as $key => $value) {
+                            if ($key != 'id') {
+                                echo "<div class='mb-3'>";
+                                echo "<label for='$key' class='form-label'>" . htmlspecialchars(ucfirst($key)) . "</label>";
+                                echo "<input type='text' class='form-control' id='$key' name='$key' value='" . htmlspecialchars($value) . "'>";
+                                echo "</div>";
+                            }
                         }
                     }
                     ?>

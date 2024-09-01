@@ -37,10 +37,10 @@
                     <script>
                         document.querySelector('.btn-daraz-store').addEventListener('click', function(e) {
                             e.preventDefault();
-                            window.open('https://www.daraz.pk/shop/totsy-pk', '_blank');
+                            window.open('https://www.daraz.pk/shop/toys-n-toys-1663884939', '_blank');
                         });
                         document.querySelector('.btn-other-daraz-store').addEventListener('click', function(e) {
                             e.preventDefault();
-                            window.open('https://www.daraz.pk/shop/velvet-vibes', '_blank');
+                            window.open('https://www.daraz.pk/ac7c3zby/?q=All-Products&from=wangpu&langFlag=en&pageTypeId=2', '_blank');
                         });
                     </script>

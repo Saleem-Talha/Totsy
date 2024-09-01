@@ -21,7 +21,7 @@ $toast_type = '';
 if (isset($_GET['delete'])) {
     $table = $_GET['table'];
     $id = $_GET['id'];
-    if ($table !== 'orders' && deleteRecord($table, $id)) {
+    if (deleteRecord($table, $id)) {
         $toast_message = "Record deleted successfully";
         $toast_type = "success";
     } else {
@@ -184,9 +184,7 @@ function getProductName($product_id) {
                         echo "<th>" . htmlspecialchars($key) . "</th>";
                     }
                 }
-                if ($table !== 'orders' && $table !== 'cart') {
-                    echo "<th>Actions</th>";
-                }
+                echo "<th>Actions</th>";
                 echo "</tr></thead>";
                 echo "<tbody>";
                 foreach ($records as $record) {
@@ -217,12 +215,10 @@ function getProductName($product_id) {
                             echo "<td>" . htmlspecialchars($value) . "</td>";
                         }
                     }
-                    if ($table !== 'orders' && $table !== 'cart') {
-                        echo "<td>
-                                <a href='update.php?table=" . urlencode($table) . "&id=" . urlencode($record['id']) . "' class='btn btn-primary btn-sm me-2 mb-2'>Update</a>
-                                <a href='?delete=1&table=" . urlencode($table) . "&id=" . urlencode($record['id']) . "' class='btn btn-danger btn-sm mb-2' onclick='return confirm(\"Are you sure?\")'>Delete</a>
-                              </td>";
-                    }
+                    echo "<td>
+                            <a href='update.php?table=" . urlencode($table) . "&id=" . urlencode($record['id']) . "' class='btn btn-primary btn-sm me-2 mb-2'>Update</a>
+                            <a href='?delete=1&table=" . urlencode($table) . "&id=" . urlencode($record['id']) . "' class='btn btn-danger btn-sm mb-2' onclick='return confirm(\"Are you sure?\")'>Delete</a>
+                          </td>";
                     echo "</tr>";
                 }
                 echo "</tbody></table>";

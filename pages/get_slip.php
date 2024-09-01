@@ -63,8 +63,8 @@ function saveOrderAndUploadImage($db, $user_id, $image_data) {
     // Save image to file
     file_put_contents($image_path, base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $image_data)));
 
-    // Save order to database
-    $query = "INSERT INTO orders (user_id, order_image) VALUES (?, ?)";
+    // Save order to database with default status 'Pending'
+    $query = "INSERT INTO orders (user_id, order_image, status) VALUES (?, ?, 'Pending')";
     $stmt = $db->prepare($query);
     if ($stmt === false) {
         die("Error preparing statement: " . $db->error);
