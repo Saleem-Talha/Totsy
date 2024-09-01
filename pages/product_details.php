@@ -271,6 +271,32 @@ $recommended_result = $recommended_stmt->get_result();
             alert('Product URL copied to clipboard!');
         }
 
+        document.querySelector('.btn-add-to-cart').addEventListener('click', function() {
+    const product_id = <?php echo json_encode($product_id); ?>;
+    const quantity = 1; // Default quantity to add to the cart
+
+    fetch('../components/add_to_cart.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+            product_id: product_id,
+            quantity: quantity
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Product added to cart successfully!');
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+
         
     </script>
 </body>

@@ -181,7 +181,7 @@
                 <li class="nav-item"><a class="nav-link" href="/totsy/pages/product_page.php" title="Products"><i class='bx bx-store'></i><span>Products</span></a></li>
                <li class="nav-item"><a class="nav-link" href="/totsy/pages/reviews_page.php" title="Reviews"><i class='bx bx-message-square-dots'></i><span>Reviews</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="/totsy/pages/about_page.php" title="About"><i class='bx bx-info-circle'></i><span>About</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#cart" title="Cart"><i class='bx bx-cart'></i><span>Cart</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="/totsy/pages/cart_page.php" title="Cart"><i class='bx bx-cart'></i><span>Cart</span></a></li>
                 <li class="nav-item"><a class="btn btn-sm btn-login-signup rounded-pill" href="/totsy/pages/login.php"><i class='bx bx-user' style="color: white;"></i><span style="color: white;">Login</span></a></li>
             </ul>
         </div>

@@ -12,6 +12,8 @@ if ($result && $result->num_rows > 0) {
     die("No password set in the database.");
 }
 
+$error_message = '';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $entered_password = $_POST["password"];
     
@@ -75,6 +77,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             cursor: pointer;
             color: #4ab6f4;
         }
+        .alert {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body class="d-flex align-items-center">
@@ -89,7 +94,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <h3 class="text-center mt-3" style="font-weight: 300;">Admin Login</h3>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="admin.php" class="animate__animated animate__fadeInUp animate__delay-1s">
+                        <?php if (!empty($error_message)): ?>
+                            <div class="alert alert-danger" role="alert">
+                                <?php echo $error_message; ?>
+                            </div>
+                        <?php endif; ?>
+                        <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="animate__animated animate__fadeInUp animate__delay-1s">
                             <div class="mb-4 password-container">
                                 <label for="password" class="form-label">Password:</label>
                                 <input type="password" class="form-control" id="password" name="password" required>

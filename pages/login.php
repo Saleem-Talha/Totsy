@@ -1,4 +1,5 @@
 <?php
+// Include database connection
 include_once '../includes/db_connect.php';
 
 $error = '';
@@ -22,11 +23,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($result->num_rows === 1) {
                 $user = $result->fetch_assoc();
                 if (password_verify($password, $user['password'])) {
-                    session_start();
+                    session_start(); // Start the session
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['user_email'] = $user['email'];
+                    $_SESSION['user_authenticated'] = true; // Set the authentication flag
                     $success = "Login successful! Redirecting to homepage...";
                     header("refresh:2;url=../index.php");
+                    exit(); // Always use exit after header redirection
                 } else {
                     $error = "Invalid email or password";
                 }
@@ -40,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $password = $_POST['password'];
             $confirm_password = $_POST['confirm_password'];
 
+            // Validate email
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $error = "Invalid email format";
             } else {
@@ -56,21 +60,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $check_email->close();
             }
 
+            // Validate password
             if (strlen($password) < 8) {
                 $error = "Password must be at least 8 characters long";
             } elseif ($password !== $confirm_password) {
                 $error = "Passwords do not match";
             }
 
+            // If there are no errors, proceed with registration
             if (empty($error)) {
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                
+
                 $stmt = $db->prepare("INSERT INTO user (email, password) VALUES (?, ?)");
                 if ($stmt === false) {
                     die("Error preparing statement: " . $db->error);
                 }
                 $stmt->bind_param("ss", $email, $hashed_password);
-                
+
                 if ($stmt->execute()) {
                     $success = "Registration successful! You can now log in.";
                 } else {
@@ -82,8 +88,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
+// Close the database connection
 $db->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -222,6 +230,9 @@ $db->close();
                                                 <button type="submit" class="btn btn-gradient w-100 py-2">
                                                     <i class='bx bx-log-in'></i> Login
                                                 </button>
+                                                <a href="../components/user_logout.php" class="mt-3 btn btn-gradient w-100 py-2">
+                                                    <i class='bx bx-log-in'></i> Logout
+                                                </a>
                                             </form>
                                         </div>
                                     </div>
