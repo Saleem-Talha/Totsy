@@ -89,10 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <h3 class="text-center mt-3" style="font-weight: 300;">Admin Login</h3>
                     </div>
                     <div class="card-body">
-                        <?php if (isset($error_message)): ?>
-                            <div class='alert alert-danger animate__animated animate__shakeX'><?= $error_message ?></div>
-                        <?php endif; ?>
-                        <form method="POST" action="" class="animate__animated animate__fadeInUp animate__delay-1s">
+                        <form method="POST" action="admin.php" class="animate__animated animate__fadeInUp animate__delay-1s">
                             <div class="mb-4 password-container">
                                 <label for="password" class="form-label">Password:</label>
                                 <input type="password" class="form-control" id="password" name="password" required>

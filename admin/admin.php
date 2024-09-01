@@ -1,6 +1,44 @@
 <?php
+// Start the session at the very beginning of the script
+session_start();
+
 // Include your database connection file
 include '../includes/db_connect.php';
+
+// Check if the user is already logged in
+if (!isset($_SESSION['admin_authenticated']) || $_SESSION['admin_authenticated'] !== true) {
+    // If not logged in, check if it's a login attempt
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['password'])) {
+        // Fetch the hashed password from the database
+        $sql = "SELECT password FROM password LIMIT 1";
+        $result = $db->query($sql);
+
+        if ($result && $result->num_rows > 0) {
+            $hashed_password = $result->fetch_assoc()['password'];
+            
+            // Verify the submitted password
+            if (verify_password($_POST['password'], $hashed_password)) {
+                $_SESSION['admin_authenticated'] = true;
+            } else {
+                // Incorrect password, redirect back to login page
+                header("Location: pass.php?error=1");
+                exit();
+            }
+        } else {
+            die("No password set in the database.");
+        }
+    } else {
+        // Not logged in and not a login attempt, redirect to login page
+        header("Location: pass.php");
+        exit();
+    }
+}
+
+// If we reach here, the user is authenticated or it's a valid form submission
+
+function verify_password($entered_password, $hashed_password) {
+    return $entered_password === $hashed_password;
+}
 
 // Enable error reporting
 error_reporting(E_ALL);
@@ -204,6 +242,7 @@ if ($product_result) {
         
         <div class="text-center mb-4">
             <a href="data.php" class="btn btn-sm btn-primary btn-lg">View Data</a>
+            <a href="logout.php" class="btn btn-sm btn-primary btn-lg">Logout</a>
         </div>
 
         <div class="row">

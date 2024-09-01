@@ -1,6 +1,7 @@
 <?php
 // Include your database connection file
 include '../includes/db_connect.php';
+include 'auth_check.php';
 
 // Enable error reporting
 error_reporting(E_ALL);

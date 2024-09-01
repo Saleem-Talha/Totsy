@@ -17,6 +17,7 @@ elseif (isset($_POST['add_review'])) {
 
 elseif (isset($_POST['add_to_cart'])) {
     $product_id = intval($_POST['product_id']);
+    $user_id = intval($_POST['user_id']);
     $quantity = intval($_POST['quantity']);
     $price_at_addition = intval($_POST['price_at_addition']);
     $total = $quantity * $price_at_addition;

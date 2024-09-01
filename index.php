@@ -41,7 +41,6 @@
 <?php include 'components/products.php'; ?>
 <?php include 'components/services.php'; ?>
 <?php include 'components/reviews.php'; ?>
-<?php include 'components/contact.php'; ?>
 <?php include 'includes/footer.php'; ?>
 <?php include 'includes/footer_links.php'; ?>
 
@@ -63,15 +62,14 @@
 
 </body>
 </html>
-
 <script>
-        document.addEventListener('keydown', function(event) {
-            // Check if Ctrl, Alt, and 'A' keys are pressed simultaneously
-            if (event.ctrlKey && event.altKey && event.key === 'a') {
-                // Prevent the default action to avoid potential conflicts
-                event.preventDefault();
-                // Redirect to admin/admin.php
-                window.location.href = 'admin/pass.php';
-            }
-        });
-    </script>
+    document.addEventListener('keydown', function(event) {
+        // Check if Ctrl, Shift, and 'T' keys are pressed simultaneously
+        if (event.ctrlKey && event.shiftKey && event.key === 'T') {
+            // Prevent the default action to avoid potential conflicts
+            event.preventDefault();
+            // Redirect to admin/pass.php
+            window.location.href = 'admin/pass.php';
+        }
+    });
+</script>

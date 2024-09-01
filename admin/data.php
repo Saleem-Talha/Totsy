@@ -1,6 +1,7 @@
 <?php
 // Include your database connection file
 include '../includes/db_connect.php';
+include 'auth_check.php';
 
 // Enable error reporting
 error_reporting(E_ALL);
@@ -124,7 +125,7 @@ function getRecords($table) {
         </div>
 
         <?php
-        $tables = ['products', 'availability', 'reviews', 'offers', 'cart'];
+        $tables = ['products', 'availability', 'reviews', 'offers', 'cart', 'user'];
 
         foreach ($tables as $table) {
             echo "<div class='card mb-4'>";

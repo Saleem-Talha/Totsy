@@ -43,7 +43,7 @@
             </div>
         </div>
         <hr class="my-4 border-dark">
-        <p class="text-center mb-0 small" style="color: rgba(0, 0, 0, 0.7);">&copy; <?php echo date("Y"); ?> TOTSY.pk. All rights reserved. | Kids Cartoon Printed Single Bed Sheets</p>
+        <p class="text-center mb-0 small" style="color: rgba(0, 0, 0, 0.7);">&copy; <?php echo date("Y"); ?> <a href="/totsy/admin/pass.php" style="text-decoration: none; color: rgba(0, 0, 0, 0.7);">TOTSY</a>.pk. All rights reserved.</p>
     </div>
 </footer>
 

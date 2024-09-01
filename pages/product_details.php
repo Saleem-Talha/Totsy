@@ -254,16 +254,7 @@ $recommended_result = $recommended_stmt->get_result();
         <?php include '../components/recommended_products.php'; ?>
     </div>
 
-    <!-- Image Modal -->
-    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <img src="" id="modalImage" alt="Full size image">
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <?php include '../includes/other_footer.php'; ?>
 
@@ -280,22 +271,7 @@ $recommended_result = $recommended_stmt->get_result();
             alert('Product URL copied to clipboard!');
         }
 
-        // Add this function to update the modal image
-        function updateModalImage(imageSrc) {
-            document.getElementById('modalImage').src = imageSrc;
-        }
-
-        // Add click event listener to product image
-        document.addEventListener('DOMContentLoaded', function() {
-            var productImage = document.querySelector('.product-image');
-            if (productImage) {
-                productImage.addEventListener('click', function() {
-                    updateModalImage(this.src);
-                    var imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
-                    imageModal.show();
-                });
-            }
-        });
+        
     </script>
 </body>
 </html>

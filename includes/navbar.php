@@ -135,6 +135,24 @@
         margin-bottom: 1rem;
     }
 }
+/* Login/Signup button styles */
+.btn-login-signup {
+    background: linear-gradient(90deg, #4ab6f4, #ff69b4);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+.btn-login-signup:hover {
+    opacity: 0.8;
+    color: white;
+}
+.btn-login-signup i {
+    margin-right: 5px;
+}
     </style>
 
 </head>
@@ -160,10 +178,11 @@
 
             <ul class="navbar-nav mb-2 mb-lg-0 ms-3 me-s">
                 <li class="nav-item"><a class="nav-link" href="index.php" title="Home"><i class='bx bx-home-alt'></i><span>Home</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="pages/product_page.php" title="Products"><i class='bx bx-store'></i><span>Products</span></a></li>
-               <li class="nav-item"><a class="nav-link" href="pages/review_page.php" title="Reviews"><i class='bx bx-message-square-dots'></i><span>Reviews</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="pages/about_page.php" title="About"><i class='bx bx-info-circle'></i><span>About</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="/totsy/pages/product_page.php" title="Products"><i class='bx bx-store'></i><span>Products</span></a></li>
+               <li class="nav-item"><a class="nav-link" href="/totsy/pages/reviews_page.php" title="Reviews"><i class='bx bx-message-square-dots'></i><span>Reviews</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="/totsy/pages/about_page.php" title="About"><i class='bx bx-info-circle'></i><span>About</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="#cart" title="Cart"><i class='bx bx-cart'></i><span>Cart</span></a></li>
+                <li class="nav-item"><a class="btn btn-sm btn-login-signup rounded-pill" href="/totsy/pages/login.php"><i class='bx bx-user' style="color: white;"></i><span style="color: white;">Login</span></a></li>
             </ul>
         </div>
     </div>
