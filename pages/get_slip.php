@@ -47,6 +47,42 @@ if ($result->num_rows > 0) {
 }
 
 $stmt->close();
+
+// Function to save order to database and upload image
+function saveOrderAndUploadImage($db, $user_id, $image_data) {
+    // Create directory if it doesn't exist
+    $upload_dir = '../order_slips/';
+    if (!file_exists($upload_dir)) {
+        mkdir($upload_dir, 0777, true);
+    }
+
+    // Generate unique filename
+    $image_name = 'order_slip_' . $user_id . '_' . time() . '.png';
+    $image_path = $upload_dir . $image_name;
+
+    // Save image to file
+    file_put_contents($image_path, base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $image_data)));
+
+    // Save order to database
+    $query = "INSERT INTO orders (user_id, order_image) VALUES (?, ?)";
+    $stmt = $db->prepare($query);
+    if ($stmt === false) {
+        die("Error preparing statement: " . $db->error);
+    }
+    $stmt->bind_param("is", $user_id, $image_name);
+    $result = $stmt->execute();
+    $stmt->close();
+
+    return $result;
+}
+
+// Handle AJAX request
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['image_data'])) {
+    $result = saveOrderAndUploadImage($db, $user_id, $_POST['image_data']);
+    echo json_encode(['success' => $result]);
+    exit;
+}
+
 $db->close();
 ?>
 
@@ -108,8 +144,8 @@ $db->close();
         </h1>
 
         <div class="card">
-            <div class="card-header">
-            <span style="font-weight: 500; background: linear-gradient(90deg, #4ab6f4, #ff69b4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">TOTSY</span>
+            <div class="card-header text-center">
+                <img src="../logo/totsy_logo.jpg" alt="" style="width: 50px; height: 50px; border-radius: 50%;">    
             </div>
             <div class="card-body">
                 <p><strong>Email:</strong> <?php echo $user_email; ?></p>
@@ -121,7 +157,6 @@ $db->close();
                                     <th>Product</th>
                                     <th>Image</th>
                                     <th>Quantity</th>
-                                    <th>Price at Addition</th>
                                     <th>Total</th>
                                 </tr>
                             </thead>
@@ -139,14 +174,13 @@ $db->close();
                                             <?php endif; ?>
                                         </td>
                                         <td><?php echo htmlspecialchars($item['quantity']); ?></td>
-                                        <td><?php echo htmlspecialchars($item['price_at_addition']); ?></td>
                                         <td><?php echo htmlspecialchars($item['total']); ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="4" class="text-right"><strong>Grand Total:</strong></td>
+                                    <td colspan="3" class="text-right"><strong>Grand Total:</strong></td>
                                     <td><strong><?php echo number_format($grand_total); ?> Rs</strong></td>
                                 </tr>
                             </tfoot>
@@ -157,27 +191,48 @@ $db->close();
                         Your cart is empty.
                     </div>
                 <?php endif; ?>
-
-                
             </div>
         </div>
         <div class="text-center mt-4">
-            <button class="btn btn-login-signup" id="saveBtn">
-                <i class='bx bx-share-alt'></i>
-                <span>Share</span>
+            <button class="btn btn-login-signup" id="confirmOrderBtn">
+                <i class='bx bx-download'></i>
+                <span>Confirm Order & Download Slip</span>
             </button>
         </div>
     </div>
     <?php include '../includes/other_footer.php'; ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
     <script>
-    document.getElementById('saveBtn').addEventListener('click', function() {
+    document.getElementById('confirmOrderBtn').addEventListener('click', function() {
         html2canvas(document.querySelector(".card")).then(canvas => {
-            // Save the image
-            const link = document.createElement('a');
-            link.href = canvas.toDataURL("image/png");
-            link.download = 'get_slip.png';
-            link.click();
+            // Get the image data
+            const imageData = canvas.toDataURL("image/png");
+
+            // Send image data to server
+            fetch('<?php echo $_SERVER['PHP_SELF']; ?>', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'image_data=' + encodeURIComponent(imageData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Order confirmed and slip saved successfully!');
+                    // Download the image
+                    const link = document.createElement('a');
+                    link.href = imageData;
+                    link.download = 'totsy_order_slip.png';
+                    link.click();
+                } else {
+                    alert('There was an error saving your order. Please try again.');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('There was an error processing your order. Please try again.');
+            });
         });
     });
     </script>

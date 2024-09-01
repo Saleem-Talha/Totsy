@@ -254,6 +254,20 @@ $recommended_result = $recommended_stmt->get_result();
         <?php include '../components/recommended_products.php'; ?>
     </div>
 
+    <!-- Image Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="" id="modalImage" alt="Full size image">
+                </div>
+            </div>
+        </div>
+    </div>
     
 
     <?php include '../includes/other_footer.php'; ?>
@@ -296,8 +310,38 @@ $recommended_result = $recommended_stmt->get_result();
     .catch(error => console.error('Error:', error));
 });
 
+        // Function to change the main image
+        function changeMainImage(thumbnail) {
+            var mainImage = document.getElementById('mainImage');
+            mainImage.src = thumbnail.src;
+            
+            // Update all thumbnails to remove 'active' class
+            var thumbnails = document.getElementsByClassName('thumbnail');
+            for (var i = 0; i < thumbnails.length; i++) {
+                thumbnails[i].classList.remove('active');
+            }
+            
+            // Add 'active' class to the clicked thumbnail
+            thumbnail.classList.add('active');
+        }
 
-        
+        // Function to update modal image
+        function updateModalImage(src) {
+            document.getElementById('modalImage').src = src;
+        }
+
+        // Event listener for main image click
+        document.getElementById('mainImage').addEventListener('click', function() {
+            updateModalImage(this.src);
+        });
+
+        // Event listener for modal show
+        var imageModal = document.getElementById('imageModal');
+        imageModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var imageSource = button.getAttribute('src');
+            updateModalImage(imageSource);
+        });
     </script>
 </body>
 </html>

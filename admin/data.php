@@ -7,7 +7,6 @@ include 'auth_check.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Function to delete a record
 function deleteRecord($table, $id) {
     global $db;
     $query = "DELETE FROM $table WHERE id = $id";
@@ -22,7 +21,7 @@ $toast_type = '';
 if (isset($_GET['delete'])) {
     $table = $_GET['table'];
     $id = $_GET['id'];
-    if (deleteRecord($table, $id)) {
+    if ($table !== 'orders' && deleteRecord($table, $id)) {
         $toast_message = "Record deleted successfully";
         $toast_type = "success";
     } else {
@@ -37,6 +36,30 @@ function getRecords($table) {
     $query = "SELECT * FROM $table";
     $result = $db->query($query);
     return $result->fetch_all(MYSQLI_ASSOC);
+}
+
+// Function to get user email by id
+function getUserEmail($user_id) {
+    global $db;
+    $query = "SELECT email FROM user WHERE id = ?";
+    $stmt = $db->prepare($query);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    return $user ? $user['email'] : 'Unknown';
+}
+
+// Function to get product name by id
+function getProductName($product_id) {
+    global $db;
+    $query = "SELECT title FROM products WHERE id = ?";
+    $stmt = $db->prepare($query);
+    $stmt->bind_param("i", $product_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $product = $result->fetch_assoc();
+    return $product ? $product['title'] : 'Unknown';
 }
 
 ?>
@@ -106,9 +129,14 @@ function getRecords($table) {
             background-color: #f8f9fa;
             border-top: none;
         }
-        .product-image {
+        .product-image, .order-image {
             max-width: 100px;
             max-height: 100px;
+            cursor: pointer;
+        }
+        .modal-body img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
@@ -125,7 +153,7 @@ function getRecords($table) {
         </div>
 
         <?php
-        $tables = ['products', 'availability', 'reviews', 'offers', 'cart', 'user'];
+        $tables = ['products', 'availability', 'reviews', 'offers', 'cart', 'user', 'orders'];
 
         foreach ($tables as $table) {
             echo "<div class='card mb-4'>";
@@ -143,9 +171,22 @@ function getRecords($table) {
                 echo "<table class='table table-hover'>";
                 echo "<thead><tr>";
                 foreach ($records[0] as $key => $value) {
-                    echo "<th>" . htmlspecialchars($key) . "</th>";
+                    if ($table === 'orders' && $key === 'user_id') {
+                        echo "<th>User Email</th>";
+                    } elseif ($table === 'cart' && $key === 'user_id') {
+                        echo "<th>User Email</th>";
+                    } elseif ($table === 'cart' && $key === 'product_id') {
+                        echo "<th>Product Name</th>";
+                    } elseif ($table === 'cart' && $key === 'price_at_addition') {
+                        // Skip this column for cart table
+                        continue;
+                    } else {
+                        echo "<th>" . htmlspecialchars($key) . "</th>";
+                    }
                 }
-                echo "<th>Actions</th>";
+                if ($table !== 'orders' && $table !== 'cart') {
+                    echo "<th>Actions</th>";
+                }
                 echo "</tr></thead>";
                 echo "<tbody>";
                 foreach ($records as $record) {
@@ -154,18 +195,34 @@ function getRecords($table) {
                         if ($key === 'image' && $table === 'products') {
                             $image_path = "../admin/uploads/" . basename($value);
                             if (file_exists($image_path) && is_readable($image_path)) {
-                                echo "<td><img src='" . htmlspecialchars($image_path) . "' alt='Product Image' class='product-image'></td>";
+                                echo "<td><img src='" . htmlspecialchars($image_path) . "' alt='Product Image' class='product-image' onclick='showImageModal(this.src)'></td>";
                             } else {
                                 echo "<td>Image not found</td>";
                             }
+                        } elseif ($key === 'order_image' && $table === 'orders') {
+                            $image_path = "../order_slips/" . basename($value);
+                            if (file_exists($image_path) && is_readable($image_path)) {
+                                echo "<td><img src='" . htmlspecialchars($image_path) . "' alt='Order Slip' class='order-image' onclick='showImageModal(this.src)'></td>";
+                            } else {
+                                echo "<td>Order slip not found</td>";
+                            }
+                        } elseif (($table === 'orders' || $table === 'cart') && $key === 'user_id') {
+                            echo "<td>" . htmlspecialchars(getUserEmail($value)) . "</td>";
+                        } elseif ($table === 'cart' && $key === 'product_id') {
+                            echo "<td>" . htmlspecialchars(getProductName($value)) . "</td>";
+                        } elseif ($table === 'cart' && $key === 'price_at_addition') {
+                            // Skip this column for cart table
+                            continue;
                         } else {
                             echo "<td>" . htmlspecialchars($value) . "</td>";
                         }
                     }
-                    echo "<td>
-                            <a href='update.php?table=" . urlencode($table) . "&id=" . urlencode($record['id']) . "' class='btn btn-primary btn-sm me-2 mb-2'>Update</a>
-                            <a href='?delete=1&table=" . urlencode($table) . "&id=" . urlencode($record['id']) . "' class='btn btn-danger btn-sm mb-2' onclick='return confirm(\"Are you sure?\")'>Delete</a>
-                          </td>";
+                    if ($table !== 'orders' && $table !== 'cart') {
+                        echo "<td>
+                                <a href='update.php?table=" . urlencode($table) . "&id=" . urlencode($record['id']) . "' class='btn btn-primary btn-sm me-2 mb-2'>Update</a>
+                                <a href='?delete=1&table=" . urlencode($table) . "&id=" . urlencode($record['id']) . "' class='btn btn-danger btn-sm mb-2' onclick='return confirm(\"Are you sure?\")'>Delete</a>
+                              </td>";
+                    }
                     echo "</tr>";
                 }
                 echo "</tbody></table>";
@@ -177,6 +234,23 @@ function getRecords($table) {
         }
         ?>
 
+    </div>
+
+    
+
+    <!-- Image Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="" id="modalImage" alt="Full size image">
+                </div>
+            </div>
+        </div>
     </div>
 
     <?php include '../includes/footer_links.php'; ?>
@@ -198,6 +272,12 @@ function getRecords($table) {
             };
             toastr.<?php echo $toast_type; ?>('<?php echo $toast_message; ?>');
         <?php endif; ?>
+
+        function showImageModal(src) {
+            document.getElementById('modalImage').src = src;
+            var imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
+            imageModal.show();
+        }
     </script>
 </body>
 </html>

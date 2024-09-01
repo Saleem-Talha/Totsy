@@ -1,3 +1,4 @@
+
 <!-- Navbar -->
 <head>
     <?php include 'header-links.php'; ?>
@@ -139,14 +140,14 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <form class="d-flex me-auto w-50">
-                <div class="search-wrapper">
-                    <input class="search-input" type="search" placeholder="Search products..." aria-label="Search">
-                    <button class="search-btn" type="submit">
-                        <i class='bx bx-search'></i>
-                    </button>
-                </div>
-            </form>
+        <form class="d-flex me-auto w-50" action="/totsy/pages/search_product.php" method="GET">
+    <div class="search-wrapper">
+        <input class="search-input" type="search" name="query" placeholder="Search products..." aria-label="Search">
+        <button class="search-btn" type="submit">
+            <i class='bx bx-search'></i>
+        </button>
+    </div>
+</form>
 
             <ul class="navbar-nav mb-2 mb-lg-0 ms-3 me-s">
                 <li class="nav-item"><a class="nav-link" href="../index.php" title="Home"><i class='bx bx-home-alt'></i><span>Home</span></a></li>
