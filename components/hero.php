@@ -4,11 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Portfolio</title>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include Popper.js and Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+
     <?php include 'includes/header-links.php'; ?>
     <!-- Make sure Bootstrap CSS and JS are included in your header-links.php -->
     <style>
         .carousel-item img {
             object-fit: cover;
+            height: 100vh; /* Default height for larger screens */
         }
         .overlay {
             background-color: rgba(0, 0, 0, 0.5);
@@ -23,19 +31,45 @@
         .logo-btn:hover {
             transform: scale(1.1);
         }
+        @media (max-width: 768px) {
+            .carousel-item img {
+                height: 70vh; /* Adjusted height for mobile screens */
+            }
+            #home {
+                height: 70vh !important; /* Overriding the inline style for mobile */
+            }
+        }
     </style>
 </head>
 <body>
 
 <!-- Hero Section with Image Carousel -->
 <section id="home" class="vh-100 position-relative overflow-hidden">
-    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
         <div class="carousel-inner h-100">
             <div class="carousel-item active h-100">
-                <img src="hero/hero1.jpg" class="d-block w-100 h-100" alt="Image 1">
+                <img src="hero/hero1.jpg" class="d-block w-100" alt="Image 1">
             </div>
             <div class="carousel-item h-100">
-                <img src="hero/hero2.jpg" class="d-block w-100 h-100" alt="Image 2">
+                <img src="hero/hero2.jpg" class="d-block w-100" alt="Image 2">
+            </div>
+            <div class="carousel-item h-100">
+                <img src="hero/hero3.jpeg" class="d-block w-100" alt="Image 3">
+            </div>
+            <div class="carousel-item h-100">
+                <img src="hero/hero4.jpeg" class="d-block w-100" alt="Image 4">
+            </div>
+            <div class="carousel-item h-100">
+                <img src="hero/hero5.jpeg" class="d-block w-100" alt="Image 5">
+            </div>
+            <div class="carousel-item h-100">
+                <img src="hero/hero6.jpeg" class="d-block w-100" alt="Image 6">
+            </div>
+            <div class="carousel-item h-100">
+                <img src="hero/hero7.jpeg" class="d-block w-100" alt="Image 7">
+            </div>
+            <div class="carousel-item h-100">
+                <img src="hero/hero8.jpeg" class="d-block w-100" alt="Image 8">
             </div>
         </div>
     </div>

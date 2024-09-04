@@ -140,7 +140,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-        <form class="d-flex me-auto w-50" action="/totsy/pages/search_product.php" method="GET">
+        <form class="d-flex me-auto w-50" action="/pages/search_product.php" method="GET">
     <div class="search-wrapper">
         <input class="search-input" type="search" name="query" placeholder="Search products..." aria-label="Search">
         <button class="search-btn" type="submit">
@@ -151,12 +151,12 @@
 
             <ul class="navbar-nav mb-2 mb-lg-0 ms-3 me-s">
                 <li class="nav-item"><a class="nav-link" href="../index.php" title="Home"><i class='bx bx-home-alt'></i><span>Home</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="/totsy/pages/product_page.php" title="Products"><i class='bx bx-store'></i><span>Products</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="/totsy/pages/reviews_page.php" title="Feedbacks"><i class='bx bx-message-square-dots'></i><span>Give Feedbacks</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="/totsy/pages/about_page.php" title="About"><i class='bx bx-info-circle'></i><span>About</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="/pages/product_page.php" title="Products"><i class='bx bx-store'></i><span>Products</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="/pages/reviews_page.php" title="Feedbacks"><i class='bx bx-message-square-dots'></i><span>Give Feedbacks</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="/pages/about_page.php" title="About"><i class='bx bx-info-circle'></i><span>About</span></a></li>
             
-               <li class="nav-item"><a class="nav-link" href="/totsy/pages/cart_page.php" title="Cart"><i class='bx bx-cart'></i><span>Cart</span></a></li>
-               <li class="nav-item"><a class="btn btn-sm btn-login-signup rounded-pill" href="/totsy/pages/login.php"><i class='bx bx-user' style="color: white;"></i><span style="color: white;">Login</span></a></li>
+               <li class="nav-item"><a class="nav-link" href="/pages/cart_page.php" title="Cart"><i class='bx bx-cart'></i><span>Cart</span></a></li>
+               <li class="nav-item"><a class="btn btn-sm btn-login-signup rounded-pill" href="/pages/login.php"><i class='bx bx-user' style="color: white;"></i><span style="color: white;">Login</span></a></li>
                
             </ul>
         </div>

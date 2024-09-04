@@ -2,13 +2,16 @@
 // Include your database connection file
 include '../includes/db_connect.php';
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 // Get the product ID from the URL parameter
 $product_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // Fetch the specific product details
-$query = "SELECT p.*, a.status 
+$query = "SELECT p.*, a.status, o.discount
           FROM products p 
           LEFT JOIN availability a ON p.id = a.product_id
+          LEFT JOIN offers o ON p.id = o.product_id
           WHERE p.id = ?";
 $stmt = $db->prepare($query);
 $stmt->bind_param("i", $product_id);
@@ -231,7 +234,14 @@ $recommended_result = $recommended_stmt->get_result();
             <div class="col-md-6">
                 <div class="product-details">
                     <h1 class="super-color"><?php echo htmlspecialchars($product['title']); ?></h1>
-                    <p class="price h3 mt-3"><?php echo number_format($product['price'], 0); ?> PKR</p>
+                    <?php if (!empty($product['discount'])): ?>
+                        <p class="price h3 mt-3">
+                            <span class="text-decoration-line-through"><?php echo number_format($product['price'], 0); ?> PKR</span>
+                            <span class="text-muted"><?php echo number_format($product['price'] * (1 - $product['discount'] / 100), 0); ?> PKR</span>
+                        </p>
+                    <?php else: ?>
+                        <p class="price h3 mt-3"><?php echo number_format($product['price'], 0); ?> PKR</p>
+                    <?php endif; ?>
                     <p class="times-sold mt-2">
                         <i class='bx bx-purchase-tag'></i>
                         Sold <?php echo htmlspecialchars($product['times_sold']); ?> times

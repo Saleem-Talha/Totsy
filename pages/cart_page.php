@@ -6,11 +6,14 @@ session_start();
 // Get the logged-in user's ID
 $user_id = $_SESSION['user_id'];
 
-// Fetch products in the user's cart
+// Fetch products in the user's cart along with any active offers
 $query = "
-    SELECT p.id, p.title, p.image, c.id as cart_id, c.quantity, c.price_at_addition, c.total 
+    SELECT p.id, p.title, p.image, c.id as cart_id, c.quantity, c.price_at_addition, c.total, 
+           IF(o.discount IS NOT NULL AND o.start_date <= CURDATE() AND o.end_date >= CURDATE(), 
+              p.price * (1 - o.discount / 100), p.price) AS effective_price
     FROM cart c
     JOIN products p ON c.product_id = p.id
+    LEFT JOIN offers o ON p.id = o.product_id
     WHERE c.user_id = ?
 ";
 $stmt = $db->prepare($query);
@@ -130,9 +133,9 @@ $db->close();
         function updateQuantity(cartId, element) {
             const quantity = element.value;
             const row = element.closest('tr');
-            const priceAtAddition = parseFloat(row.getAttribute('data-price-at-addition'));
+            const effectivePrice = parseFloat(row.getAttribute('data-effective-price'));
             const totalElement = row.querySelector('.total');
-            const newTotal = priceAtAddition * quantity;
+            const newTotal = effectivePrice * quantity;
             totalElement.textContent = newTotal.toFixed(2);
 
             // Send updated quantity to server
@@ -177,7 +180,7 @@ $db->close();
                             </thead>
                             <tbody>
                                 <?php foreach ($cart_items as $item): ?>
-                                    <tr data-price-at-addition="<?php echo htmlspecialchars($item['price_at_addition']); ?>">
+                                    <tr data-effective-price="<?php echo htmlspecialchars($item['effective_price']); ?>">
                                         <td><?php echo htmlspecialchars($item['title']); ?></td>
                                         <td>
                                             <?php

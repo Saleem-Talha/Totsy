@@ -275,7 +275,7 @@ $discounted_products = getDiscountedProducts($db);
             while ($product = $discounted_products->fetch_assoc()): 
             ?>
                 <div class="col" data-aos="fade-up" data-aos-delay="<?php echo $delay; ?>">
-                    <a href="/totsy/pages/product_details.php?id=<?php echo $product['id']; ?>" class="card-link">
+                    <a href="/pages/product_details.php?id=<?php echo $product['id']; ?>" class="card-link">
                         <div class="card">
                             <?php
                             $image_path = "admin/uploads/" . basename($product['image']);
@@ -289,7 +289,7 @@ $discounted_products = getDiscountedProducts($db);
                                 <h5 class="card-title super-color"><?php echo htmlspecialchars($product['title']); ?></h5>
                                 <p class="price">
                                     <span style="text-decoration: line-through;"><?php echo number_format($product['price'], 0); ?> PKR</span>
-                                    <span style="color: red;"><?php echo number_format($product['price'] * (1 - $product['discount']/100), 0); ?> PKR</span>
+                                    <span class="text-muted"><?php echo number_format($product['price'] * (1 - $product['discount']/100), 0); ?> PKR</span>
                                 </p>
                                 <div class="d-flex justify-content-between align-items-center mt-auto">
                                     <p class="times-sold mb-0">

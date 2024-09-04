@@ -116,25 +116,45 @@
 .navbar-expanded .nav-item .nav-link i {
     color: #000; /* Change color to black when scrolled or expanded */
 }
-@media (min-width: 992px) {
-    .nav-item .nav-link span {
-        display: none;
-    }
-    .nav-item .nav-link {
-        padding: 0.5rem;
-    }
-}
-/* Add more vertical margin for smaller screens */
 @media (max-width: 991px) {
-    .navbar-nav .nav-item {
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem;
-    }
-    .search-wrapper{
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-    }
-}
+            .navbar-brand {
+                margin: auto;
+            }
+
+            .navbar-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .navbar-nav .nav-item {
+                flex: 1 0 50%; /* 2 items per row */
+                margin-top: 0.5rem;
+                margin-bottom: 0.5rem;
+                text-align: center;
+            }
+
+            .navbar-nav .nav-item:nth-child(3) {
+                flex: 1 0 33.33%; /* 3 items in the next row */
+            }
+
+            .search-wrapper {
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+                width: 100%;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .navbar-toggler {
+                display: none;
+            }
+
+            #navbarNav {
+                display: flex !important;
+            }
+        }
 /* Login/Signup button styles */
 .btn-login-signup {
     background: linear-gradient(90deg, #4ab6f4, #ff69b4);
@@ -163,9 +183,6 @@
             <img src="logo/totsy_logo.jpg" alt="Logo" width="70" height="70" class="d-inline-block align-text-top me-3 rounded-circle">
             <span style="font-weight: 500; background: linear-gradient(90deg, #4ab6f4, #ff69b4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">TOTSY</span>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
         <div class="collapse navbar-collapse" id="navbarNav">
         <form class="d-flex me-auto w-50" action="/totsy/pages/search_product.php" method="GET">
     <div class="search-wrapper">
@@ -196,12 +213,6 @@
         } else {
             navbar.classList.remove('navbar-scrolled');
         }
-    });
-
-    // Add event listener for navbar toggler
-    document.querySelector('.navbar-toggler').addEventListener('click', function() {
-        var navbar = document.querySelector('.navbar');
-        navbar.classList.toggle('navbar-expanded');
     });
 </script>
 </body>
